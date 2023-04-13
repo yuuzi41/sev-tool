@@ -846,7 +846,7 @@ bool Tests::test_export_cert_chain_vcek(void)
     Command cmd(m_output_folder, m_verbose_flag);
 
     do {
-        if (sev::get_device_type() != PSP_DEVICE_TYPE_MILAN) {
+        if (sev::get_device_type() != PSP_DEVICE_TYPE_MILAN && sev::get_device_type() != PSP_DEVICE_TYPE_GENOA) {
             printf("*Skipping export_cert_chain_vcek tests (unsupported)\n");
             ret = true;
             break;
@@ -869,7 +869,7 @@ bool Tests::test_validate_cert_chain_vcek(void)
     Command cmd(m_output_folder, m_verbose_flag, CCP_NOT_REQ);
 
     do {
-        if (sev::get_device_type() != PSP_DEVICE_TYPE_MILAN) {
+        if (sev::get_device_type() != PSP_DEVICE_TYPE_MILAN && sev::get_device_type() != PSP_DEVICE_TYPE_GENOA) {
             printf("*Skipping validate_cert_chain_vcek tests (unsupported)\n");
             ret = true;
             break;

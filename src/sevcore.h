@@ -35,9 +35,11 @@ const std::string DEFAULT_SEV_DEVICE     = "/dev/sev";
 const std::string ASK_ARK_NAPLES_FILE    = "ask_ark_naples.cert";
 const std::string ASK_ARK_ROME_FILE      = "ask_ark_rome.cert";
 const std::string ASK_ARK_MILAN_FILE     = "ask_ark_milan.cert";
+const std::string ASK_ARK_GENOA_FILE     = "ask_ark_genoa.cert";
 const std::string ASK_ARK_NAPLES_SITE    = ASK_ARK_PATH_SITE + ASK_ARK_NAPLES_FILE;
 const std::string ASK_ARK_ROME_SITE      = ASK_ARK_PATH_SITE + ASK_ARK_ROME_FILE;
 const std::string ASK_ARK_MILAN_SITE     = ASK_ARK_PATH_SITE + ASK_ARK_MILAN_FILE;
+const std::string ASK_ARK_GENOA_SITE     = ASK_ARK_PATH_SITE + ASK_ARK_GENOA_FILE;
 
 constexpr uint32_t NAPLES_FAMILY     = 0x17UL;      // 23
 constexpr uint32_t NAPLES_MODEL_LOW  = 0x00UL;
@@ -48,12 +50,16 @@ constexpr uint32_t ROME_MODEL_HIGH   = 0x3FUL;
 constexpr uint32_t MILAN_FAMILY      = 0x19UL;      // 25
 constexpr uint32_t MILAN_MODEL_LOW   = 0x00UL;
 constexpr uint32_t MILAN_MODEL_HIGH  = 0x0FUL;
+constexpr uint32_t GENOA_FAMILY      = 0x19UL;      // 25
+constexpr uint32_t GENOA_MODEL_LOW   = 0x10UL;
+constexpr uint32_t GENOA_MODEL_HIGH  = 0x1FUL;
 
 enum __attribute__((mode(QI))) ePSP_DEVICE_TYPE {
     PSP_DEVICE_TYPE_INVALID = 0,
     PSP_DEVICE_TYPE_NAPLES  = 1,
     PSP_DEVICE_TYPE_ROME    = 2,
     PSP_DEVICE_TYPE_MILAN   = 3,
+    PSP_DEVICE_TYPE_GENOA   = 4,
 };
 
 /**

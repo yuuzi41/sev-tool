@@ -112,6 +112,9 @@ ePSP_DEVICE_TYPE AMDCert::get_device_type(const amd_cert *ark)
     if(memcmp(&ark->key_id_0, amd_root_key_id_milan, sizeof(ark->key_id_0 + ark->key_id_1)) == 0) {
         return PSP_DEVICE_TYPE_MILAN;
     }
+    if(memcmp(&ark->key_id_0, amd_root_key_id_genoa, sizeof(ark->key_id_0 + ark->key_id_1)) == 0) {
+        return PSP_DEVICE_TYPE_GENOA;
+    }
     return ret;
 }
 
@@ -157,7 +160,7 @@ SEV_ERROR_CODE AMDCert::amd_cert_validate_sig(const amd_cert *cert,
             sha_digest = sha_digest_256;
             sha_length = sizeof(hmac_sha_256);
         }
-        else /*if (ROME/MILAN)*/ {
+        else /*if (ROME/MILAN/GENOA)*/ {
             algo = SHA_TYPE_384;
             sha_digest = sha_digest_384;
             sha_length = sizeof(hmac_sha_512);
@@ -356,8 +359,10 @@ SEV_ERROR_CODE AMDCert::amd_cert_validate_ark(const amd_cert *ark)
             amd_root_key_id = amd_root_key_id_naples;
         else if (device_type == PSP_DEVICE_TYPE_ROME)
             amd_root_key_id = amd_root_key_id_rome;
-        else //if (device_type == PSP_DEVICE_TYPE_MILAN)
+        else if (device_type == PSP_DEVICE_TYPE_MILAN)
             amd_root_key_id = amd_root_key_id_milan;
+        else //if (device_type == PSP_DEVICE_TYPE_GENOA)
+            amd_root_key_id = amd_root_key_id_genoa;
 
         if (memcmp(&ark->key_id_0, amd_root_key_id, sizeof(ark->key_id_0 + ark->key_id_1)) != 0) {
             cmd_ret = ERROR_INVALID_CERTIFICATE;

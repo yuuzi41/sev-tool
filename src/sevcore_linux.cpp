@@ -62,6 +62,9 @@ ePSP_DEVICE_TYPE sev::get_device_type(void)
     else if (family == MILAN_FAMILY && (int)model >= (int)MILAN_MODEL_LOW && model <= MILAN_MODEL_HIGH) {
         return PSP_DEVICE_TYPE_MILAN;
     }
+    else if (family == GENOA_FAMILY && (int)model >= (int)GENOA_MODEL_LOW && model <= GENOA_MODEL_HIGH) {
+        return PSP_DEVICE_TYPE_GENOA;
+    }
     else
         return PSP_DEVICE_TYPE_INVALID;
 }
@@ -111,6 +114,9 @@ int sev::get_ask_ark(const std::string output_folder, const std::string cert_fil
         else if (device_type == PSP_DEVICE_TYPE_MILAN) {
             cmd += ASK_ARK_MILAN_SITE;
         }
+        else if (device_type == PSP_DEVICE_TYPE_GENOA) {
+            cmd += ASK_ARK_GENOA_SITE;
+        }
         else {
             printf("Error: Unable to determine Platform type. " \
                         "Detected %i\n", (uint32_t)device_type);
@@ -147,12 +153,20 @@ int sev::get_ask_ark_pem(const std::string output_folder, const std::string cert
     std::string cert_chain_w_path = output_folder + cert_chain_file;
     std::string ask_w_path = output_folder + ask_file;
     std::string ark_w_path = output_folder + ark_file;
+    ePSP_DEVICE_TYPE device_type = PSP_DEVICE_TYPE_INVALID;
 
     do {
+        device_type = get_device_type();
+
         cmd += "-O " + cert_chain_w_path;  // Really ASK and ARK
         cmd += " \"";
         cmd += KDS_VCEK;
-        cmd += "Milan/";
+        if (device_type == PSP_DEVICE_TYPE_MILAN) {
+            cmd += "Milan/";
+        }
+        else if (device_type == PSP_DEVICE_TYPE_GENOA) {
+            cmd += "Genoa/";
+        }
         cmd += KDS_VCEK_CERT_CHAIN;
         cmd += "\"";
 
@@ -685,6 +699,7 @@ int SEVDevice::generate_vcek_ask(const std::string output_folder,
     std::string output = "";
     std::string der_cert_w_path = output_folder + vcek_der_file;
     std::string pem_cert_w_path = output_folder + vcek_pem_file;
+    ePSP_DEVICE_TYPE device_type = PSP_DEVICE_TYPE_INVALID;
 
     // Set struct to 0
     memset(&id_buf, 0, sizeof(sev_user_data_get_id));
@@ -693,8 +708,14 @@ int SEVDevice::generate_vcek_ask(const std::string output_folder,
     memset(&cmd, 0, sizeof(cmd));
 
     do {
+        device_type = get_device_type();
 
-        fmt = "wget -O %s \"%sMilan/%s?blSPL=%02d&teeSPL=%02d&snpSPL=%02d&ucodeSPL=%02d\"";
+        if (device_type == PSP_DEVICE_TYPE_MILAN) {
+            fmt = "wget -O %s \"%sMilan/%s?blSPL=%02d&teeSPL=%02d&snpSPL=%02d&ucodeSPL=%02d\"";
+        }
+        else if (device_type == PSP_DEVICE_TYPE_GENOA) {
+            fmt = "wget -O %s \"%sGenoa/%s?blSPL=%02d&teeSPL=%02d&snpSPL=%02d&ucodeSPL=%02d\"";
+        }
 
         // Get the ID of the Platform
         // Send the command
